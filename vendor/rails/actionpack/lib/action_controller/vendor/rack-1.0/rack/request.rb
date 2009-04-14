@@ -118,12 +118,12 @@ module Rack
     # multipart/form-data.
     def POST
       if @env["rack.request.form_input"].eql? @env["rack.input"]
-        RAILS_DEFAULT_LOGGER.warn "POST form_input eql rack.input: #{@env['rack.input'].inspect}"
+        RAILS_DEFAULT_LOGGER.warn "POST form_input eql rack.input: #{@env['rack.input'].string.inspect}"
         @env["rack.request.form_hash"]
       elsif form_data?
         @env["rack.request.form_input"] = @env["rack.input"]
         unless @env["rack.request.form_hash"] = Utils::Multipart.parse_multipart(env)
-          RAILS_DEFAULT_LOGGER.warn "POST with form_data and form_hash: #{@env['rack.input'].inspect}"
+          RAILS_DEFAULT_LOGGER.warn "POST with form_data and form_hash: #{@env['rack.input'].string.inspect}"
           form_vars = @env["rack.input"].read
 
           # Fix for Safari Ajax postings that always append \0
