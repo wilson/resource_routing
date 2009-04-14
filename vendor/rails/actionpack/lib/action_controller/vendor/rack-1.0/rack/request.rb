@@ -126,10 +126,11 @@ module Rack
         unless @env["rack.request.form_hash"] = Utils::Multipart.parse_multipart(env)
           before = @env["rack.input"].read
           @env["rack.input"].rewind if @env["rack.input"].respond_to?(:rewind)
-          form_vars = @env["rack.input"].read
-          unless before == form_vars
-            RAILS_DEFAULT_LOGGER.warn "BEFORE: #{before.inspect}  AFTER: #{form_vars.inspect}"
+          after = @env["rack.input"].read
+          unless before == after
+            RAILS_DEFAULT_LOGGER.warn "BEFORE: #{before.inspect}  AFTER: #{after.inspect}"
           end
+          form_vars = @env["rack.input"].read
 
           # Fix for Safari Ajax postings that always append \0
           form_vars.sub!(/\0\z/, '')
