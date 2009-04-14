@@ -12,6 +12,7 @@ module ActionController
         env["action_controller.request.request_parameters"] = params
       end
 
+      RAILS_DEFAULT_LOGGER.warn "calling rack with env: #{env.inspect} and position #{env['rack.input'].pos}"
       @app.call(env)
     end
 
