@@ -124,9 +124,9 @@ module Rack
       elsif form_data?
         @env["rack.request.form_input"] = @env["rack.input"]
         input = @env["rack.input"]
-        RAILS_DEFAULT_LOGGER.warn "0: length: #{input.length} pos: #{input.pos}"
+        RAILS_DEFAULT_LOGGER.warn "handed an un-rewound input by: #{caller[0,7].inspect}" unless input.pos.zero?
         unless @env["rack.request.form_hash"] = Utils::Multipart.parse_multipart(env)
-          RAILS_DEFAULT_LOGGER.warn "1: length: #{input.length} pos: #{input.pos}"
+          RAILS_DEFAULT_LOGGER.warn "RACK BUG" unless input.pos.zero?
           form_vars = input.read
 
           # Fix for Safari Ajax postings that always append \0
