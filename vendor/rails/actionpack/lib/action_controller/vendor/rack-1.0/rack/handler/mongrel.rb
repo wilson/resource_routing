@@ -39,6 +39,7 @@ module Rack
       end
 
       def process(request, response)
+        RAILS_DEFAULT_LOGGER.warn "mongrel request: #{request.body.inspect}"
         env = {}.replace(request.params)
         env.delete "HTTP_CONTENT_TYPE"
         env.delete "HTTP_CONTENT_LENGTH"

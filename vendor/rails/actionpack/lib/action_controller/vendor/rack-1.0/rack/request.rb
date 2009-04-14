@@ -117,22 +117,21 @@ module Rack
     # This method support both application/x-www-form-urlencoded and
     # multipart/form-data.
     def POST
-      RAILS_DEFAULT_LOGGER.warn "\nHandling POST"
+      RAILS_DEFAULT_LOGGER.warn "\nHandling POST: #{@env['rack.input'].string.inspect}"
       if @env["rack.request.form_input"].eql? @env["rack.input"]
-        RAILS_DEFAULT_LOGGER.warn "POST form_input eql rack.input: #{@env['rack.input'].string.inspect}"
+        RAILS_DEFAULT_LOGGER.warn "POST rack.request.form_input == rack.input: #{@env['rack.request.form_hash'].inspect}"
         @env["rack.request.form_hash"]
       elsif form_data?
         @env["rack.request.form_input"] = @env["rack.input"]
         unless @env["rack.request.form_hash"] = Utils::Multipart.parse_multipart(env)
           form_vars = @env["rack.input"].read
-          RAILS_DEFAULT_LOGGER.warn "POST with form_data and form_hash: #{@env['rack.request.form_hash'].inspect}"
-          RAILS_DEFAULT_LOGGER.warn "POST resulting in form_vars: #{form_vars.inspect}"
 
           # Fix for Safari Ajax postings that always append \0
           form_vars.sub!(/\0\z/, '')
 
           @env["rack.request.form_vars"] = form_vars
           @env["rack.request.form_hash"] = Utils.parse_nested_query(form_vars)
+          RAILS_DEFAULT_LOGGER.warn "POST resulting in form_vars: #{form_vars.inspect}"
 
           begin
             @env["rack.input"].rewind if @env["rack.input"].respond_to?(:rewind)
@@ -141,7 +140,7 @@ module Rack
             # such as when using plain CGI under Apache
           end
         else
-          RAILS_DEFAULT_LOGGER.warn "POST with non-multipart form_data: #{@env['rack.input'].string.inspect}"
+          RAILS_DEFAULT_LOGGER.warn "POST with multipart form_data: #{@env['rack.input'].string.inspect}"
         end
         RAILS_DEFAULT_LOGGER.warn "POST returning form_hash: #{@env['rack.request.form_hash'].inspect}\n"
         @env["rack.request.form_hash"]
