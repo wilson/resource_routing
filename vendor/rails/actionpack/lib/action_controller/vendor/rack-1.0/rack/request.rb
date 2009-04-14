@@ -124,6 +124,7 @@ module Rack
       elsif form_data?
         @env["rack.request.form_input"] = @env["rack.input"]
         unless @env["rack.request.form_hash"] = Utils::Multipart.parse_multipart(env)
+          @env["rack.input"].rewind if @env["rack.input"].respond_to?(:rewind)
           form_vars = @env["rack.input"].read
 
           # Fix for Safari Ajax postings that always append \0
