@@ -123,9 +123,9 @@ module Rack
         @env["rack.request.form_hash"]
       elsif form_data?
         @env["rack.request.form_input"] = @env["rack.input"]
-          RAILS_DEFAULT_LOGGER.warn "0: length: #{input.length} pos: #{input.pos}"
+        input = @env["rack.input"]
+        RAILS_DEFAULT_LOGGER.warn "0: length: #{input.length} pos: #{input.pos}"
         unless @env["rack.request.form_hash"] = Utils::Multipart.parse_multipart(env)
-          input = @env["rack.input"]
           RAILS_DEFAULT_LOGGER.warn "1: length: #{input.length} pos: #{input.pos}"
           form_vars = input.read
 
