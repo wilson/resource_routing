@@ -4,6 +4,7 @@ module ActionController
       def initialize(io)
         @io = io
         @rewindable = io.is_a?(::StringIO)
+        RAILS_DEFAULT_LOGGER.warn "RewindableIO had position #{@io.pos}"
       end
 
       def method_missing(method, *args, &block)
