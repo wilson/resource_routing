@@ -429,6 +429,7 @@ module ActionController
 
       def call(env)
         request = Request.new(env)
+        RAILS_DEFAULT_LOGGER.warn "request: #{request.inspect}"
         app = Routing::Routes.recognize(request)
         app.call(env).to_a
       end
