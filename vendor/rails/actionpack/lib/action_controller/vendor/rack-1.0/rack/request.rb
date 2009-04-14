@@ -118,16 +118,18 @@ module Rack
     # multipart/form-data.
     def POST
       if @env["rack.request.form_input"].eql? @env["rack.input"]
+        RAILS_DEFAULT_LOGGER.warn "POST form_input eql rack.input: #{@env['rack.input'].inspect}"
         @env["rack.request.form_hash"]
       elsif form_data?
         @env["rack.request.form_input"] = @env["rack.input"]
-        unless @env["rack.request.form_hash"] =
-            Utils::Multipart.parse_multipart(env)
+        unless @env["rack.request.form_hash"] = Utils::Multipart.parse_multipart(env)
+          RAILS_DEFAULT_LOGGER.warn "POST with form_data and form_hash: #{@env['rack.input'].inspect}"
           form_vars = @env["rack.input"].read
 
           # Fix for Safari Ajax postings that always append \0
           form_vars.sub!(/\0\z/, '')
 
+          RAILS_DEFAULT_LOGGER.warn "POST resulting in form_vars: #{form_vars.inspect}"
           @env["rack.request.form_vars"] = form_vars
           @env["rack.request.form_hash"] = Utils.parse_nested_query(form_vars)
 
@@ -137,7 +139,10 @@ module Rack
             # Handles exceptions raised by input streams that cannot be rewound
             # such as when using plain CGI under Apache
           end
+        else
+          RAILS_DEFAULT_LOGGER.warn "POST with form_data: #{@env['rack.input'].inspect}"
         end
+        RAILS_DEFAULT_LOGGER.warn "POST returning form_hash: #{@env['rack.request.form_hash'].inspect}"
         @env["rack.request.form_hash"]
       else
         {}
