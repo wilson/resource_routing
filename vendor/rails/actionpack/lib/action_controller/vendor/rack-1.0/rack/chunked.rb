@@ -12,6 +12,7 @@ module Rack
     end
 
     def call(env)
+      RAILS_DEFAULT_LOGGER.warn "Rack::Chunked called by: #{caller.inspect}"
       status, headers, body = @app.call(env)
       headers = HeaderHash.new(headers)
 
