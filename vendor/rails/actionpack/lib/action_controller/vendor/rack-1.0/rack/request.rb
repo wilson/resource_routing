@@ -119,7 +119,6 @@ module Rack
     def POST
       RAILS_DEFAULT_LOGGER.warn "\nHandling POST: #{@env['rack.input'].string.inspect}"
       if @env["rack.request.form_input"].eql? @env["rack.input"]
-        RAILS_DEFAULT_LOGGER.warn "POST rack.request.form_input == rack.input: #{@env['rack.request.form_hash'].inspect}"
         @env["rack.request.form_hash"]
       elsif form_data?
         @env["rack.request.form_input"] = @env["rack.input"]
@@ -142,10 +141,7 @@ module Rack
             # Handles exceptions raised by input streams that cannot be rewound
             # such as when using plain CGI under Apache
           end
-        else
-          RAILS_DEFAULT_LOGGER.warn "POST with multipart form_data: #{@env['rack.input'].string.inspect}"
         end
-        RAILS_DEFAULT_LOGGER.warn "POST returning form_hash: #{@env['rack.request.form_hash'].inspect}\n"
         @env["rack.request.form_hash"]
       else
         {}

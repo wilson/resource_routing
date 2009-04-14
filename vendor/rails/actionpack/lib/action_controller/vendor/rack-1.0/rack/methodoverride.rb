@@ -11,7 +11,6 @@ module Rack
 
     def call(env)
       if env["REQUEST_METHOD"] == "POST"
-        RAILS_DEFAULT_LOGGER.warn "MethodOverride: input was not rewound!" if env["rack.input"].pos.nonzero?
         req = Request.new(env)
         method = req.POST[METHOD_OVERRIDE_PARAM_KEY] ||
           env[HTTP_METHOD_OVERRIDE_HEADER]
