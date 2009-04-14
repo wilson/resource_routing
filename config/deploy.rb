@@ -3,7 +3,7 @@ set :repository, "git://github.com/wilson/resource_routing.git"
 
 set :mongrel_environment, "production"
 set :rails_env, "production"
-host "taigan-staging", :app, :db, :primary
+host "taigan-staging", :app, :db, :web, :primary
 
 set :application, "routing"
 set(:deploy_to) { "/data/#{application}" }
